@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Git Commit Date Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        code, textarea, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 12px;
+            position: fixed;
+            z-index: 50;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s, visibility 0.3s;
+            opacity: 0;
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .shell-tab.active {
+            background-color: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-3xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 text-center md:text-left">
+            <h1 class="text-3xl font-bold text-slate-900 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                Git Commit Generator
+            </h1>
+            <p class="text-slate-500 mt-2">Forge commit history by generating commands with custom timestamps.</p>
+        </header>
+
+        <!-- Main Card -->
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mb-8">
+            <div class="p-6 md:p-8 space-y-6">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Date Input -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Date</label>
+                        <input type="date" id="date" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" />
+                    </div>
+
+                    <!-- Time Input -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Time</label>
+                        <input type="time" id="time" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Timezone Select -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Timezone Offset</label>
+                        <div class="relative">
+                            <select id="timezone" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none outline-none transition-all cursor-pointer">
+                                <option value="+0000">UTC (+0000)</option>
+                                <option value="+0530">India (IST +0530)</option>
+                                <option value="-0500">USA (EST -0500)</option>
+                                <option value="-0800">USA (PST -0800)</option>
+                                <option value="+0100">Germany (CET +0100)</option>
+                                <option value="+0900">Japan (JST +0900)</option>
+                                <option value="+0800">China (CST +0800)</option>
+                                <option value="+0300">Russia (MSK +0300)</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message Input -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Commit Message</label>
+                        <input type="text" id="message" placeholder="initial commit" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" />
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <button onclick="generateAll()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg shadow-indigo-100 transition-all flex items-center justify-center gap-2 group active:scale-[0.98]">
+                    Generate Snippets
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Output Header with Shell Selector -->
+        <div id="output-header" class="hidden mb-4 flex items-center justify-between">
+            <h2 class="text-lg font-bold text-slate-800">Generated Commands</h2>
+            <div class="flex bg-slate-200 p-1 rounded-lg">
+                <button onclick="setShell('bash')" id="btn-bash" class="shell-tab active px-3 py-1 text-xs font-medium rounded-md transition-all border border-transparent">Bash</button>
+                <button onclick="setShell('powershell')" id="btn-powershell" class="shell-tab px-3 py-1 text-xs font-medium rounded-md transition-all border border-transparent ml-1">PowerShell</button>
+                <button onclick="setShell('cmd')" id="btn-cmd" class="shell-tab px-3 py-1 text-xs font-medium rounded-md transition-all border border-transparent ml-1">CMD</button>
+            </div>
+        </div>
+
+        <!-- Output Area -->
+        <div id="snippets" class="space-y-4 pb-12">
+            <div id="placeholder" class="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl">
+                <p class="text-slate-400">Fill details above to generate Git commands</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">Command copied to clipboard!</div>
+
+    <script>
+        let currentShell = 'bash';
+
+        function getLocalOffset() {
+            const now = new Date();
+            const offsetMinutes = -now.getTimezoneOffset();
+            const sign = offsetMinutes >= 0 ? '+' : '-';
+            const absOffset = Math.abs(offsetMinutes);
+            const hours = String(Math.floor(absOffset / 60)).padStart(2, '0');
+            const mins = String(absOffset % 60).padStart(2, '0');
+            return `${sign}${hours}${mins}`;
+        }
+
+        function setCurrentDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            document.getElementById('date').value = `${year}-${month}-${day}`;
+
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('time').value = `${hours}:${minutes}`;
+
+            const localOffset = getLocalOffset();
+            const select = document.getElementById('timezone');
+            let found = false;
+
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === localOffset) {
+                    select.selectedIndex = i;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                const opt = document.createElement('option');
+                opt.value = localOffset;
+                opt.text = `Current Local Time (${localOffset})`;
+                opt.selected = true;
+                select.add(opt);
+            }
+        }
+
+        function setShell(shell) {
+            currentShell = shell;
+            document.querySelectorAll('.shell-tab').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${shell}`).classList.add('active');
+            generateAll();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+
+        function copySnippet(id) {
+            const textarea = document.getElementById(id);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Copied to clipboard!");
+            } catch (err) {
+                showToast("Failed to copy automatically.");
+            }
+        }
+
+        function generateAll() {
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const timezone = document.getElementById('timezone').value;
+            const messageInput = document.getElementById('message').value || "initial commit";
+
+            if (!date || !time) {
+                if (document.getElementById('placeholder')) showToast("Select date and time.");
+                return;
+            }
+
+            document.getElementById('output-header').classList.remove('hidden');
+
+            const datetimeWithTZ = `${date} ${time}:00 ${timezone}`;
+            const datetimeNoTZ = `${date} ${time}:00`;
+
+            // Command Constructor Logic
+            const getCommand = (type) => {
+                let msg = messageInput.replace(/"/g, '\\"');
+                
+                const templates = {
+                    bash: {
+                        stage: `git add .`,
+                        authorOnly: `git commit -m "${msg}" --date="${datetimeNoTZ}"`,
+                        forge: `GIT_AUTHOR_DATE="${datetimeWithTZ}" GIT_COMMITTER_DATE="${datetimeWithTZ}" git commit -m "${msg}"`,
+                        amend: `GIT_AUTHOR_DATE="${datetimeWithTZ}" GIT_COMMITTER_DATE="${datetimeWithTZ}" git commit --amend --no-edit`,
+                        push: `git push origin HEAD --force`,
+                        verify: `git log -1 --format=fuller`,
+                        undo: `git reset --soft HEAD~1`
+                    },
+                    powershell: {
+                        stage: `git add .`,
+                        authorOnly: `git commit -m "${msg}" --date="${datetimeNoTZ}"`,
+                        forge: `$env:GIT_AUTHOR_DATE="${datetimeWithTZ}"; $env:GIT_COMMITTER_DATE="${datetimeWithTZ}"; git commit -m "${msg}"`,
+                        amend: `$env:GIT_AUTHOR_DATE="${datetimeWithTZ}"; $env:GIT_COMMITTER_DATE="${datetimeWithTZ}"; git commit --amend --no-edit`,
+                        push: `git push origin HEAD --force`,
+                        verify: `git log -1 --format=fuller`,
+                        undo: `git reset --soft HEAD~1`
+                    },
+                    cmd: {
+                        stage: `git add .`,
+                        authorOnly: `git commit -m "${msg}" --date="${datetimeNoTZ}"`,
+                        forge: `set "GIT_AUTHOR_DATE=${datetimeWithTZ}" && set "GIT_COMMITTER_DATE=${datetimeWithTZ}" && git commit -m "${msg}"`,
+                        amend: `set "GIT_AUTHOR_DATE=${datetimeWithTZ}" && set "GIT_COMMITTER_DATE=${datetimeWithTZ}" && git commit --amend --no-edit`,
+                        push: `git push origin HEAD --force`,
+                        verify: `git log -1 --format=fuller`,
+                        undo: `git reset --soft HEAD~1`
+                    }
+                };
+                return templates[currentShell][type];
+            };
+
+            const sections = [
+                {
+                    label: "Commit Operations",
+                    items: [
+                        { title: "Standard Commit (Author Date)", desc: "Sets visible author date. Committer date remains current.", cmd: getCommand('authorOnly') },
+                        { title: "Full Timestamp Forge (Sync)", desc: "Syncs both dates. Vital for GitHub contribution squares.", cmd: getCommand('forge') },
+                        { title: "Amend Last Commit", desc: "Forges the date of your existing head commit.", cmd: getCommand('amend') }
+                    ]
+                },
+                {
+                    label: "Maintenance & Sync",
+                    items: [
+                        { title: "Stage All Changes", desc: "Stage files before committing.", cmd: getCommand('stage') },
+                        { title: "Force Push", desc: "Required to update remote history after forging.", cmd: getCommand('push') },
+                        { title: "Verify Timestamps", desc: "Displays 'Fuller' log to check Author vs Commit dates.", cmd: getCommand('verify') },
+                        { title: "Undo Last Commit", desc: "Reset head by 1, keeping your changes staged.", cmd: getCommand('undo') }
+                    ]
+                }
+            ];
+
+            const container = document.getElementById('snippets');
+            container.innerHTML = '';
+
+            sections.forEach((section) => {
+                const sectionTitle = document.createElement('h3');
+                sectionTitle.className = "text-xs font-bold text-slate-400 uppercase tracking-widest mt-8 mb-4";
+                sectionTitle.innerText = section.label;
+                container.appendChild(sectionTitle);
+
+                section.items.forEach((s, idx) => {
+                    const uniqueId = `snippet-${section.label.replace(/\s/g, '')}-${idx}`;
+                    const card = document.createElement('div');
+                    card.className = "bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm mb-4";
+                    card.innerHTML = `
+                        <div class="px-5 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-sm">${s.title}</h3>
+                                <p class="text-[10px] text-slate-500 mt-0.5 uppercase tracking-wide font-medium">${s.desc}</p>
+                            </div>
+                            <button onclick="copySnippet('${uniqueId}')" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-indigo-50 transition-colors flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                                Copy
+                            </button>
+                        </div>
+                        <div class="p-4 bg-slate-900">
+                            <textarea id="${uniqueId}" readonly class="w-full bg-transparent text-indigo-300 text-xs leading-relaxed focus:outline-none h-12 md:h-8 resize-none border-none p-0 overflow-hidden">${s.cmd}</textarea>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            });
+        }
+
+        window.onload = setCurrentDateTime;
+    </script>
+
+</body>
+</html>
