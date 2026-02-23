@@ -1,0 +1,18 @@
+[
+  {"id":"init","title":"git init","description":"Initialize a new Git repository in the current directory.","commands":["git init"]},
+  {"id":"clone","title":"git clone","description":"Clone a repository into a new directory.","commands":["git clone <repository>"]},
+  {"id":"remote","title":"git remote add","description":"Add a remote repository by name and URL.","commands":["git remote add <remote_name> <repository_url>"]},
+  {"id":"status","title":"git status","description":"Show working tree status: staged, unstaged, and untracked files.","commands":["git status"]},
+  {"id":"add","title":"git add","description":"Stage a file or path for the next commit.","commands":["git add <file_path>"]},
+  {"id":"commit","title":"git commit","description":"Create a commit with a message, or amend the last commit.","commands":["git commit -m \"<commit_message>\"","git commit --amend"]},
+  {"id":"diff","title":"git diff","description":"Show unstaged changes, or compare with another branch.","commands":["git diff","git diff <branch>"]},
+  {"id":"log","title":"git log","description":"View commit history for the current branch.","commands":["git log"]},
+  {"id":"checkout","title":"git checkout","description":"Switch to a branch or restore files.","commands":["git checkout <branch_name>"]},
+  {"id":"pull-push","title":"git pull / git push","description":"Fetch and merge from remote, or push your commits to remote.","commands":["git pull <optional_remote> <branch_name>","git push"]},
+  {"id":"merge","title":"git merge","description":"Merge another branch into the current branch. Checkout target first, then merge.","commands":["git checkout <target_branch>","git merge <feature_branch>"]},
+  {"id":"rebase","title":"git rebase","description":"Replay current branch commits on top of another branch.","commands":["git rebase <branch_name>"]},
+  {"id":"blame","title":"git blame","description":"Show who last modified each line. Use `-L start,end` for a line range.","commands":["git blame <file_name>","git blame -L 5,5 example.txt"]},
+  {"id":"reflog","title":"git reflog","description":"Show reference log of HEAD changes; useful to recover lost commits.","commands":["git reflog"]},
+  {"id":"reset","title":"git reset","description":"Reset HEAD (use --soft, --mixed, or --hard). Use with care.","commands":["git reset"]},
+  {"id":"bisect","title":"git bisect","description":"Find the commit that introduced a bug. Mark current as bad, a known good commit as good; Git narrows it down.","commands":["git bisect start","git bisect bad                 # current is bad"]}
+]
